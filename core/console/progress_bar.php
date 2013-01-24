@@ -407,4 +407,3 @@ class Console_ProgressBar {
         return ($this->_target_num - $last['value'])/($last['value'] - $first['value']) * ($last['time'] - $first['time']);
     }
 }
-

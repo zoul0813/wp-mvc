@@ -158,7 +158,6 @@ class MvcController {
 	}
 	
 	public function render_view($path, $options=array()) {
-	
 		// Rendering from within a controller
 		if ($this->is_controller) {
 			if ($this->is_admin) {
