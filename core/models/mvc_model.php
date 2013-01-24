@@ -14,9 +14,9 @@ class MvcModel {
 	public $validation_error_html = null;
 	public $schema = null;
 	public $wp_post = null;
-	private $data_validator = null;
-	private $db_adapter = null;
-	private $wp_post_adapter = null;
+	protected $data_validator = null;
+	protected $db_adapter = null;
+	protected $wp_post_adapter = null;
 	
 	function __construct() {
 		
@@ -363,7 +363,7 @@ class MvcModel {
 							case 'has_many':
 								// To do: test this
 								$join = array(
-									'table' => $this->table,
+									'table' => $join_model->table,
 									'on' => $join_model_name.'.'.$association['foreign_key'].' = '.$this->name.'.'.$this->primary_key,
 									'alias' => $join_model_name
 								);
@@ -449,7 +449,7 @@ class MvcModel {
 		}
 	}
 	
-	private function validate_data($data) {
+	public function validate_data($data) {
 		$rules = $this->validate;
 		if (!empty($rules)) {
 			foreach ($rules as $field => $rule) {
@@ -676,7 +676,7 @@ class MvcModel {
 					$config = array(
 						'type' => 'has_and_belongs_to_many',
 						'name' => $association_name,
-						'class' => $association_name,
+						'class' => isset($value['class']) ? $value['class'] : $association_name,
 						'foreign_key' => isset($value['foreign_key']) ? $value['foreign_key'] : MvcInflector::underscore($this->name).'_id',
 						'association_foreign_key' => isset($value['association_foreign_key']) ? $value['association_foreign_key'] : MvcInflector::underscore($association_name).'_id',
 						'join_table' => $this->process_table_name($value['join_table']),
@@ -751,7 +751,7 @@ class MvcModel {
 				return $object;
 			}
 		}
-		MvcError::fatal('Undefined method: '.$class.'::'.$method.'.');
+		MvcError::fatal('Undefined method: '.get_class($this).'::'.$method.'.');
 	}
 
 }

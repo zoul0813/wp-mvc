@@ -79,6 +79,12 @@ class MvcModelObject {
 				return $associated_objects;
 		}
 	}
+
+	protected function process_table_name($table_name) {
+		global $wpdb;
+		$table_name = str_replace('{prefix}', $wpdb->prefix, $table_name);
+		return $table_name;
+	}
 	
 }
 
