@@ -675,7 +675,7 @@ class MvcModel {
 					}
 					$config = array(
 						'type' => 'has_and_belongs_to_many',
-						'name' => $association_name,
+						'name' => isset($value['name']) ? $value['name'] : $association_name,
 						'class' => isset($value['class']) ? $value['class'] : $association_name,
 						'foreign_key' => isset($value['foreign_key']) ? $value['foreign_key'] : MvcInflector::underscore($this->name).'_id',
 						'association_foreign_key' => isset($value['association_foreign_key']) ? $value['association_foreign_key'] : MvcInflector::underscore($association_name).'_id',
