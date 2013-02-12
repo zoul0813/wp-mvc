@@ -35,7 +35,7 @@ if (is_admin()) {
 	add_filter('wp_loaded', array($loader, 'flush_rewrite_rules'));
 	add_filter('rewrite_rules_array', array($loader, 'add_rewrite_rules'));
 	add_filter('query_vars', array($loader, 'add_query_vars'));
-	add_filter('template_redirect', array($loader, 'template_redirect'));
+	add_filter('template_redirect', array($loader, 'template_redirect'), 0);
 
 }
 
