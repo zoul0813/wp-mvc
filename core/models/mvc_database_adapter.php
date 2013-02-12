@@ -165,7 +165,11 @@ class MvcDatabaseAdapter {
 	public function get_insert_values_sql($data) {
 		$values = array();
 		foreach ($data as $value) {
-			$values[] = '"'.$this->escape($value).'"';
+			if (isset($value) && is_null($value)) {
+				$values[] = 'null';
+			} else {
+				$values[] = '"'.$this->escape($value).'"';
+			}
 		}
 		$sql = '('.implode(', ', $values).')';
 		return $sql;
