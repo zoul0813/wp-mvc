@@ -14,6 +14,11 @@ class MvcRouter {
 		$routes = self::get_public_routes();
 		$controller = $options['controller'];
 		$action = $options['action'];
+		$query = array_diff_key($options, array('controller'=>true, 'action'=>true, 'object'=>true));
+		$querystring = null;
+    if(!empty($query)) {
+      $querystring = http_build_query($query);
+    }
 		$matched_route = null;
 		if (!empty($options['object']) && is_object($options['object'])) {
 			if (!empty($options['object']->__model_name) && !$controller) {
@@ -78,6 +83,9 @@ class MvcRouter {
 			if (!empty($options['id'])) {
 				$url .= $options['id'].'/';
 			}
+		}
+		if(!empty($querystring)) {
+		  $url .= '?' . $querystring;
 		}
 		return $url;
 	}
