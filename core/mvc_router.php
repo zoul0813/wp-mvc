@@ -137,7 +137,7 @@ class MvcRouter {
 	private function &get_instance() {
 		static $instance = array();
 		if (!$instance) {
-			$instance[0] =& new MvcRouter();
+			$instance[0] = new MvcRouter();
 			$instance[0]->routes = array(
 				'public' => array(),
 				'admin_ajax' => array()

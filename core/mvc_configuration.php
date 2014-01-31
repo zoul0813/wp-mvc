@@ -6,7 +6,7 @@ class MvcConfiguration {
 		static $instance = array();
 		
 		if (!$instance) {
-			$instance[0] =& new MvcConfiguration();
+			$instance[0] = new MvcConfiguration();
 		}
 		
 		return $instance[0];

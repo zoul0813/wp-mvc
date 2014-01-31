@@ -7,7 +7,7 @@ class MvcModelRegistry {
 	private function &get_instance() {
 		static $instance = array();
 		if (!$instance) {
-			$instance[0] =& new MvcModelRegistry();
+			$instance[0] = new MvcModelRegistry();
 		}
 		return $instance[0];
 	}
