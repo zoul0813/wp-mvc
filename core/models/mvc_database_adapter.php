@@ -102,26 +102,32 @@ class MvcDatabaseAdapter {
 		$use_table_alias = isset($options['use_table_alias']) ? $options['use_table_alias'] : true;
 		$sql_clauses = array();
 		foreach ($conditions as $key => $value) {
-			if (is_array($value)) {
-				if (is_string($key) && !in_array($key, array('OR', 'AND'))) {
-					$values = array();
-					foreach ($value as $val) {
-						$values[] = '"'.$this->escape($val).'"';
+			if (!(strpos($key, 'RAW') === false)) {
+				$sql_clauses[] = $value;
+			
+			} else {
+				if (is_array($value)) {
+					if (is_string($key) && !in_array($key, array('OR', 'AND'))) {
+						$values = array();
+						foreach ($value as $val) {
+							$values[] = '"'.$this->escape($val).'"';
+						}
+						$values = implode(',', $values);
+						$sql_clauses[] = $this->escape($key).' IN ('.$values.')';
+					} else {
+						$clauses = $this->get_where_sql_clauses($value);
+						$logical_operator = $key == 'OR' ? ' OR ' : ' AND ';
+						$sql_clauses[] = '('.implode($logical_operator, $clauses).')';
 					}
-					$values = implode(',', $values);
-					$sql_clauses[] = $this->escape($key).' IN ('.$values.')';
-				} else {
-					$clauses = $this->get_where_sql_clauses($value);
-					$logical_operator = $key == 'OR' ? ' OR ' : ' AND ';
-					$sql_clauses[] = '('.implode($logical_operator, $clauses).')';
+					continue;
 				}
-				continue;
+				if (strpos($key, '.') === false && $use_table_alias) {
+					$key = $this->defaults['model_name'].'.'.$key;
+				}
+				
+				$operator = preg_match('/\s+(<|>|<=|>=|<>|\!=|[\w\s]+)/', $key) ? ' ' : ' = ';
+				$sql_clauses[] = $this->escape($key).$operator.'"'.$this->escape($value).'"';
 			}
-			if (strpos($key, '.') === false && $use_table_alias) {
-				$key = $this->defaults['model_name'].'.'.$key;
-			}
-			$operator = preg_match('/\s+(<|>|<=|>=|<>|\!=|[\w\s]+)/', $key) ? ' ' : ' = ';
-			$sql_clauses[] = $this->escape($key).$operator.'"'.$this->escape($value).'"';
 		}
 		return $sql_clauses;
 	}
