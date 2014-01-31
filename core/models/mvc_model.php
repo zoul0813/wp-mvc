@@ -137,7 +137,7 @@ class MvcModel {
 			$object = $this->find_by_id($id);
 			$this->after_save($object);
 		}
-		return true;
+		return $id;
 	}
 	
 	public function insert($data) {
