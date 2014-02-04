@@ -103,7 +103,8 @@ class MvcDatabaseAdapter {
 		$sql_clauses = array();
 		foreach ($conditions as $key => $value) {
 			if (!(strpos($key, 'RAW') === false)) {
-				$sql_clauses[] = $value;
+			  global $wpdb;
+				$sql_clauses[] = str_replace('{prefix}', $wpdb->prefix, $value);
 			
 			} else {
 				if (is_array($value)) {
