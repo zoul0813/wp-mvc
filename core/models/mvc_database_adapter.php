@@ -150,8 +150,9 @@ class MvcDatabaseAdapter {
 	}
 	
 	public function get_set_sql($data) {
+    $schema_data = array_intersect_key($data, $this->schema);
 		$clauses = array();
-		foreach ($data as $key => $value) {
+		foreach ($schema_data as $key => $value) {
 			if (is_string($value) || is_numeric($value)) {
 				$clauses[] = $key.' = "'.$this->escape($value).'"';
 			} elseif (isset($key) && is_null($value)){
@@ -163,15 +164,16 @@ class MvcDatabaseAdapter {
 	}
 	
 	public function get_insert_columns_sql($data) {
-		$columns = array_keys($data);
-		$columns = $this->db->escape_array($columns);
+    $schema_columns = array_keys(array_intersect_key($data, $this->schema));
+		$columns = $this->db->escape_array($schema_columns);
 		$sql = '('.implode(', ', $columns).')';
 		return $sql;
 	}
 	
 	public function get_insert_values_sql($data) {
+    $schema_data = array_intersect_key($data, $this->schema);
 		$values = array();
-		foreach ($data as $value) {
+		foreach ($schema_data as $value) {
 			if (is_null($value)) {
 				$values[] = 'null';
 			} else {
