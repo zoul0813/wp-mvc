@@ -585,7 +585,7 @@ class MvcModel {
 			$field = $result->Field;
 			$type_schema = explode('(', $result->Type);
 			$type = $type_schema[0];
-			$length = isset($type_schema[1]) ? rtrim($type_schema[1], ')') : null; 
+			$length = isset($type_schema[1]) ? (strpos($type_schema[1], ')') !== false ? substr($type_schema[1], 0, strpos($type_schema[1], ')')) : null) : null;  //rtrim($type_schema[1], ')') : null; 
 			$column = array();
 			$column['field'] = $field;
 			$column['key'] = $result->Key ? $result->Key : null;
