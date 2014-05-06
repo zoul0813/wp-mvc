@@ -142,16 +142,16 @@ class MvcRouter {
 		$_this->add_admin_ajax_route($route);
 	}
 
-	private function &get_instance() {
-		static $instance = array();
-		if (!$instance) {
-			$instance[0] = new MvcRouter();
-			$instance[0]->routes = array(
+	private static $instance = array();
+	public static function &get_instance() {
+		if (!self::$instance) {
+			self::$instance[0] = new MvcRouter();
+			self::$instance[0]->routes = array(
 				'public' => array(),
 				'admin_ajax' => array()
 			);
 		}
-		return $instance[0];
+		return self::$instance[0];
 	}
 
 	public function &get_public_routes() {
