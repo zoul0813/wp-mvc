@@ -11,6 +11,7 @@ Author URI:
 if (!defined('MVC_PLUGIN_PATH')) {
 	define('MVC_PLUGIN_PATH', dirname(__FILE__).'/');
 }
+define('MVC_FLUSH_NEEDED_OPTION', 'wpmvc_flush_needed');
 
 if (is_admin()) {
 
@@ -32,7 +33,9 @@ if (is_admin()) {
 	$loader = new MvcPublicLoader();
 	
 	// Filters for public URLs
-	add_filter('wp_loaded', array($loader, 'flush_rewrite_rules'));
+	if( get_option( MVC_FLUSH_NEEDED_OPTION, 1 ) ){
+		add_filter('wp_loaded', array($loader, 'flush_rewrite_rules'));
+	}
 	add_filter('rewrite_rules_array', array($loader, 'add_rewrite_rules'));
 	add_filter('query_vars', array($loader, 'add_query_vars'));
 	add_filter('template_redirect', array($loader, 'template_redirect'), 0);

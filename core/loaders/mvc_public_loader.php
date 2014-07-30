@@ -4,10 +4,16 @@ require_once 'mvc_loader.php';
 
 class MvcPublicLoader extends MvcLoader {
 	
+	protected $has_add_rewrite_rules = false;
+
 	public function flush_rewrite_rules($rules) {
 		global $wp_rewrite;
-		
-		$wp_rewrite->flush_rules();
+		$wp_rewrite->flush_rules( false );
+		if ( get_option( MVC_FLUSH_NEEDED_OPTION ) !== false ) {
+			update_option( MVC_FLUSH_NEEDED_OPTION, 0 );
+		} else {
+			add_option( MVC_FLUSH_NEEDED_OPTION, 0, '', 'yes' );
+		}
 	}
 	
 	public function add_rewrite_rules($rules) {
@@ -43,6 +49,7 @@ class MvcPublicLoader extends MvcLoader {
 		
 		$rules = array_merge($new_rules, $rules);
 		$rules = apply_filters('mvc_public_rewrite_rules', $rules);
+		$this->has_add_rewrite_rules = true;
 		return $rules;
 	}
 	
@@ -96,13 +103,18 @@ class MvcPublicLoader extends MvcLoader {
 	}
 	
 	public function add_query_vars($vars) {
+		//Check to see if the rewrite rules function has run
+		if ( ! $this->has_add_rewrite_rules ) {
+			//If not we need to run it to make sure missing data is added
+			$rewrite_rules = $this->add_rewrite_rules( array() );
+		}
 		$vars = array_merge($vars, $this->query_vars);
 		return $vars;
 	}
 	
 	public function template_redirect() {
 		global $wp_query, $mvc_params;
-		
+
 		$routing_params = $this->get_routing_params();
 		
 		if ($routing_params) {

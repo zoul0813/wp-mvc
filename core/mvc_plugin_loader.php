@@ -19,11 +19,21 @@ class MvcPluginLoader {
 		$plugin = $this->get_plugin_name_from_file_path($file_path);
 		$this->add_plugin($plugin);
 		$this->init_settings_defaults($file_path);
+		if ( get_option( MVC_FLUSH_NEEDED_OPTION ) !== false ) {
+			update_option( MVC_FLUSH_NEEDED_OPTION, 1 );
+		} else {
+			add_option( MVC_FLUSH_NEEDED_OPTION, 1, '', 'yes' );
+		}
 	}
 	
 	public function deactivate_app($file_path) {
 		$plugin = $this->get_plugin_name_from_file_path($file_path);
 		$this->remove_plugin($plugin);
+		if ( get_option( MVC_FLUSH_NEEDED_OPTION ) !== false ) {
+			update_option( MVC_FLUSH_NEEDED_OPTION, 1 );
+		} else {
+			add_option( MVC_FLUSH_NEEDED_OPTION, 1, '', 'yes' );
+		}
 	}
 	
 	protected function add_plugin($plugin) {
