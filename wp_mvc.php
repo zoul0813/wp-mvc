@@ -36,7 +36,6 @@ if (is_admin()) {
 	if( get_option( MVC_FLUSH_NEEDED_OPTION, 1 ) ){
 		add_filter('wp_loaded', array($loader, 'flush_rewrite_rules'));
 	}
-	add_filter('rewrite_rules_array', array($loader, 'add_rewrite_rules'));
 	add_filter('query_vars', array($loader, 'add_query_vars'));
 	add_filter('template_redirect', array($loader, 'template_redirect'), 0);
 
@@ -47,5 +46,6 @@ if (is_admin()) {
 add_action('init', array($loader, 'init'));
 add_action('widgets_init', array($loader, 'register_widgets'));
 add_filter('post_type_link', array($loader, 'filter_post_link'), 10, 2);
+add_filter('rewrite_rules_array', array($loader, 'add_rewrite_rules'));
 
 ?>
