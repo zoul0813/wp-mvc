@@ -2,7 +2,7 @@
 
 class MvcDispatcher {
 
-	function dispatch($options=array()) {
+	public static function dispatch($options=array()) {
 		
 		$controller_name = $options['controller'];
 		$action = $options['action'];
@@ -21,7 +21,7 @@ class MvcDispatcher {
 		}
 		
 		$request_params = $_REQUEST;
-		$request_params = self::escape_params($request_params);
+		$request_params = static::escape_params($request_params);
 		
 		$params = array_merge($request_params, $params);
 		
@@ -47,16 +47,15 @@ class MvcDispatcher {
 		if (!$controller->view_rendered) {
 			$controller->render_view($controller->views_path.$action, $options);
 		}
-	
 	}
-	
-	private function escape_params($params) {
+
+	private static function escape_params($params) {
 		if (is_array($params)) {
 			foreach ($params as $key => $value) {
 				if (is_string($value)) {
 					$params[$key] = stripslashes($value);
 				} else if (is_array($value)) {
-					$params[$key] = self::escape_params($value);
+					$params[$key] = static::escape_params($value);
 				}
 			}
 		}
